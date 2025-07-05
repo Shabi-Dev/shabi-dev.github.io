@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>&#6158; Shabi Shabani</title> <!-- Trick 17: mongolian space character -->
+  <link rel="icon" href="img/favicon.ico" type="image/x-icon">
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="background-pattern"></div>
+
+  <header>
+    <div class="header-container">
+        <div class="site-name">Shabi Shabani</div>
+        <nav class="nav-links">
+          <button data-page="0" class="nav-btn active">home</button>
+          <button data-page="1" class="nav-btn">projects</button>
+		  <button data-page="2" class="nav-btn">cloud</button>
+          <button data-page="3" class="nav-btn">contact</button>
+        </nav>
+    </div>
+  </header>
+
+  <div class="scroll-container">
+    <main id="slider-container">
+      <section class="page" id="about">
+        <h2>About Me</h2>
+        <p>Hey! I'm Shabi and I'm a Master's student in Computer Science at KIT with a strong focus on IT security and privacy.</p>
+        <p>My interests include cloud computing and security, software security engineering, privacy-enhancing technologies, cryptography, and hardware security.</p>
+        <p>I’m passionate about building systems that are secure by design and respect user privacy.</p>
+        <p style="margin-top: 1000px;">Bottom of About</p>
+      </section>
+
+      <section class="page" id="projects">
+        <h2>Projects</h2>
+        <p>Projects will be listed here soon.</p>
+        <p style="margin-top: 1000px;">More projects down here</p>
+      </section>
+	  
+	  <section class="page" id="cloud">
+		<h2>Cloud</h2>
+		<p>I self-host my own private cloud on a Raspberry Pi 4 using NextCloudPi.</p>
+		<p>It's a small, privacy-friendly setup for personal file storage and syncing.</p>
+		<p> You can access it here: <a href="https://cloud.shabi-shabani.de" target="_blank" rel="noopener noreferrer"> cloud.shabi-shabani.de </a> </p>
+	  </section>
+
+      <section class="page" id="contact">
+        <h2>contact me</h2>
+        <br>
+        <p>whether to collab or just to chat, feel free to reach out :)</p>
+        <p id="email-link"></p>
+        <script> <!-- Attempt to prevent bot-scraping of email addresses. -->
+          const user = "mail";
+          const domain = "shabi-shabani.de";
+          const email = `${user}@${domain}`;
+          
+          const link = document.createElement("a");
+          link.href = `mailto:${email}`;
+          link.textContent = email;
+          
+          link.style.color = "#0af";
+          link.style.textDecoration = "none"; 
+
+          document.getElementById("email-link").appendChild(link);
+        </script>
+        <p style="margin-top: 500px;">More contact info</p>
+      </section>
+    </main>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
