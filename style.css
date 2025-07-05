@@ -148,6 +148,7 @@ header {
 #slider-container {
   display: flex;
   width: 400vw; /* 4 pages */
+  flex-wrap: nowrap;
   height: 100vh;
   overflow: hidden; 
   position: relative;
