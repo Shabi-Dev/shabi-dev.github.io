@@ -91,7 +91,7 @@ header {
   letter-spacing: 0.05em;
   background: none;
   border: none;
-  color: #f38524;
+  color: #5e8acd;
   font-size: 1.2rem;
   margin: 0 1rem;
   cursor: pointer;
@@ -102,7 +102,7 @@ header {
 }
 
 .nav-btn:hover, .nav-btn.active {
-  color: #f39c12;
+  color: #3068c3;
 }
 
 
