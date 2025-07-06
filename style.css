@@ -12,6 +12,7 @@ html, body {
   font-weight: 300;
   color: #ece3d4;
   height: 100%;
+  background: rgba(0,0,0,0.6);
   margin: 0;
   overflow: hidden;
 }
