@@ -21,10 +21,10 @@ html, body {
   top: 0; left: 0;
   width: 100vw;
   height: 100vh;
-  background-image: url("img/stars.png"); 
+  background-image: url("img/clouds4.png"); 
   background-repeat: repeat;
   background-color: black;
-  background-size: 2000px 2000px; 
+  background-size: 3500px 3500px; 
   z-index: -1;
   will-change: background-position;
 }
