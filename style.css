@@ -11,10 +11,14 @@ html, body {
   font-family: 'Poppins', sans-serif; 
   font-weight: 300;
   color: #ece3d4;
-  height: 100%;
-  background: rgba(0,0,0,0.6);
-  margin: 0;
   overflow: hidden;
+  background: rgba(0,0,0,0.6);
+}
+
+ h2 {
+  color: #d6c5a5;
+  font-weight: bold;
+  font-size: 1.6rem;
 }
 
 .background-pattern {
@@ -24,8 +28,7 @@ html, body {
   height: 100vh;
   background-image: url("img/clouds4.png"); 
   background-repeat: repeat;
-  background-color: black;
-  background-size: 3500px 3500px; 
+  background-size: 3500px 3500px;
   z-index: -1;
   will-change: background-position;
 }
@@ -45,7 +48,6 @@ header {
   flex-wrap: wrap;
   align-items: center;
   justify-content: center;
-  position: relative;
 }
 
 .site-name {
@@ -59,28 +61,8 @@ header {
 .nav-links {
   display: flex;
   gap: 0.66rem;
-  flex-wrap: wrap;
-  justify-content: center;
-}
-/* handles narrow pages */
-@media (max-width: 600px) {
-  .header-container {
-    flex-direction: column;
-    align-items: center;
-  }
-
-  .site-name {
-    margin-right: 0;
-    margin-left: -1rem;
-    text-align: center;
-    font-size: 1.8rem;
-    margin-bottom: 0.1rem;
-    margin-top: 0.25rem;
-  }
-
-  .nav-links {
-    justify-content: center;
-  }
+  flex-wrap: nowrap;
+  justify-content: space-between;
 }
 
 /* navigation buttons */
@@ -88,11 +70,11 @@ header {
 .nav-btn {
   font-family: 'Poppins', sans-serif;
   font-weight: 325; 
+  font-size: clamp(0.6rem, 4.25vw, 1.2rem);
   letter-spacing: 0.05em;
   background: none;
   border: none;
-  color: #5e8acd;
-  font-size: 1.2rem;
+  color: #5e8acd; 
   margin: 0 1rem;
   cursor: pointer;
   padding: 0.5rem 0rem;
@@ -114,60 +96,115 @@ header {
 
 .page {
   font-family: 'Roboto Mono', monospace; 
-  font-weight: 400;
-  line-height: 1.6;
+  font-weight: 450;
+  font-size: 1.2rem;
+  line-height: 1.5;
   flex-shrink: 0;
   scrollbar-width: none;
   -ms-overflow-style: none; 
   text-align: center;
   width: 100vw;
-  height: calc(100vh - 60px); /* subtract header height*/
-  overflow-y: overlay;
+  height: auto;
+  min-height: calc(100vh - 60px); /* subtract header height*/
+  overflow-y: hidden;
   padding: 2rem;
   color: #ece3d4;
-}
-
-.page {
   scrollbar-color: #0af transparent;
 }
 
-.page::-webkit-scrollbar {
-  width: 8px;
-  display: none;   
-}
-
-.page::-webkit-scrollbar-thumb {
-  background-color: #0af;
-  border-radius: 4px;
-}
-
-.scroll-container::-webkit-scrollbar {
-  display: none;
-}
 
 #slider-container {
   display: flex;
-  width: 400vw; /* 4 pages */
-  flex-wrap: nowrap;
-  height: 100vh;
-  overflow: hidden; 
+  width: 400vw;
+  min-height: 100%;
+  height: auto;
+  overflow: hidden;
   position: relative;
-  top: 160px; 
+  top: 160px;
   transition: transform 1.337s cubic-bezier(0.4, 0, 0.2, 1);
 }
-
 .scroll-container {
+  overflow-x: hidden;
+  overflow-y: auto;
   height: 100vh;
-  overflow-y: scroll;
   scrollbar-width: none;
   -ms-overflow-style: none;
 }
 
-a {
-  color: #0af;
-  text-decoration: none;
+*::-webkit-scrollbar {
+  display: none;
 }
 
-a:hover {
-  text-decoration: underline;
+.page-content {
+  max-width: max(600px, 60%);
+  width: 100%;
+  margin: 0 auto;      
+  text-align: center;
+}
+
+.entry {
+  display: grid;
+  grid-template-columns: 150px 1fr; 
+  column-gap: 2.5rem;
+  align-items: start;
+  justify-content: center;  
+  margin-bottom: 1em;
+  max-width: 900px; 
+  margin: 0.35em auto;
+}
+
+.date {
+  font-weight: bold;
+  text-align: left;
+}
+
+.desc {
+  text-align: left;
+}
+
+/* handles narrow pages */
+@media (max-width: 620px) {
+  .header-container {
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  h2 {
+    font-size: 1.7rem;
+  }
+
+  .site-name {
+    margin-right: 0;
+    margin-left: -1rem;
+    text-align: center;
+    font-size: 1.8rem;
+    margin-bottom: 0.1rem;
+    margin-top: 0.25rem;
+  }
+
+  .nav-links {
+    justify-content: center;
+  }
+  
+  .nav-btn {
+    margin: 0.3rem 0.3rem;
+  }
+  
+  .page {
+    font-weight: 300;
+    font-size: 1.2rem;
+  }
+  
+  .entry {
+    column-gap: 0.5rem;
+  }
+  
+  .date {
+    font-size: 1rem;
+  }
+  
+  .desc {
+    font-size: 1rem;
+  }
+
 }
