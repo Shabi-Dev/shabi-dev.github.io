@@ -1,13 +1,18 @@
 const slider = document.getElementById('slider-container');
 const bg = document.querySelector('.background-pattern');
-const buttons = document.querySelectorAll('.nav-btn');
+const buttons = [...document.querySelectorAll('.nav-btn')];
+const navContainer = document.querySelector('.nav-links');
 
-// state variables for page selection
+// state "energy line"
+let energyRAF = null;
+let energyLine = null;
+let energyDot = null;
+
 let currentPage = 0;
 let targetPage = 0;
 
-// state variables for background animation
-let wiggleAngle = 0; // keeps track of incrementing angle to let the background appear to "breathe"
+// state background animation
+let wiggleAngle = 0; // incrementing angle to let background "breathe"
 let lastScrollY = 0;
 
 // coordinates of background
@@ -58,10 +63,196 @@ function animate() {
   requestAnimationFrame(animate);
 }
 
+// Stops any in-flight energy-line animation
+function cancelEnergyEffects() {
+  if (energyRAF !== null) {
+    cancelAnimationFrame(energyRAF);
+    energyRAF = null;
+  }
+  if (energyLine) {
+    energyLine.remove();
+    energyLine = null;
+  }
+  if (energyDot) {
+    energyDot.remove();
+    energyDot = null;
+  }
+}
+
+
+
+// Animates the ink fill + glowing line
+function transfer(from, to) {
+  if (from === to || from < 0) return;
+
+  cancelEnergyEffects();
+
+  const source = buttons[from];
+  const target = buttons[to];
+
+  const sourceFill = source.querySelector('.fill');
+  const targetFill = target.querySelector('.fill');
+
+  // prevent double clikc issues
+  [sourceFill, targetFill].forEach(el => {
+    el.getAnimations().forEach(a => a.cancel());
+  });
+
+  const sourceRect = source.getBoundingClientRect();
+  const targetRect = target.getBoundingClientRect();
+  const navRect = navContainer.getBoundingClientRect();
+
+  const right = to > from;
+
+  // src
+  sourceFill.animate([
+    { clipPath: 'inset(0 0 0 0)' },
+    { clipPath: right ? 'inset(0 0 0 100%)' : 'inset(0 100% 0 0)' }
+  ], {
+    duration: 420,
+    easing: 'ease-in-out',
+    fill: 'forwards'
+  });
+
+  // tgt
+  targetFill.animate([
+    { clipPath: right ? 'inset(0 100% 0 0)' : 'inset(0 0 0 100%)' },
+    { clipPath: 'inset(0 0 0 0)' }
+  ], {
+    duration: 420,
+    delay: 280,
+    easing: 'ease-in-out',
+    fill: 'both'
+  });
+
+  // line definition here
+  const GAP = 10;
+
+  const startX = right
+    ? sourceRect.right - navRect.left + GAP
+    : sourceRect.left - navRect.left - GAP;
+
+  const stopX = right
+    ? targetRect.left - navRect.left - GAP
+    : targetRect.right - navRect.left + GAP;
+
+  const y = sourceRect.top - navRect.top + sourceRect.height * 0.5;
+
+  const line = document.createElement('div');
+  line.style.position = 'absolute';
+  line.style.left = startX + 'px';
+  line.style.top = y + 'px';
+  line.style.width = '0px';
+  line.style.height = '3px';
+  line.style.pointerEvents = 'none';
+  line.style.borderRadius = '999px';
+  line.style.filter = 'blur(1px)';
+  line.style.opacity = '1';
+  line.style.zIndex = '0';
+
+  line.style.background = right
+    ? `linear-gradient(90deg, rgba(243,156,18,0), rgba(243,156,18,.15) 20%, rgba(243,156,18,.55) 45%, rgba(255,220,120,1) 100%)`
+    : `linear-gradient(270deg, rgba(243,156,18,0), rgba(243,156,18,.15) 20%, rgba(243,156,18,.55) 45%, rgba(255,220,120,1) 100%)`;
+
+  navContainer.appendChild(line);
+
+  const headDot = document.createElement('div');
+  headDot.style.position = 'absolute';
+  headDot.style.width = '8px';
+  headDot.style.height = '8px';
+  headDot.style.borderRadius = '50%';
+  headDot.style.background = '#ffd96a';
+  headDot.style.boxShadow = '0 0 10px #ffd96a, 0 0 18px #f39c12';
+
+  navContainer.appendChild(headDot);
+
+  energyLine = line;
+  energyDot = headDot;
+
+  // line animation
+  const duration = 700;
+  const CONNECT = 0.35;
+  const HOLD = 0.15;
+  const RETRACT = 0.50;
+
+  const start = performance.now();
+
+  function easeOut(x) {
+    return 1 - Math.pow(1 - x, 3);
+  }
+
+  function step(now) {
+    const elapsed = now - start;
+    const t = Math.min(elapsed / duration, 1);
+
+    let head;
+    let tail;
+
+    if (t < CONNECT) {
+      // 1. grow the line from the source to dest
+      const u = easeOut(t / CONNECT);
+      head = startX + (stopX - startX) * u;
+      tail = startX;
+    } else if (t < CONNECT + HOLD) {
+      // 2. pause
+      head = stopX;
+      tail = startX;
+    } else {
+      // 3. retract line
+      const u = easeOut((t - CONNECT - HOLD) / RETRACT);
+      head = stopX;
+      tail = startX + (stopX - startX) * u;
+    }
+
+    line.style.left = Math.min(head, tail) + 'px';
+    line.style.width = Math.abs(head - tail) + 'px';
+
+    headDot.style.left = (head - 4) + 'px';
+    headDot.style.top = (y - 3) + 'px';
+
+
+    // extra juice
+    if (t < CONNECT + HOLD) {
+      headDot.style.opacity = '1';
+      headDot.style.transform = 'scale(1)';
+    } else {
+      const u = (t - CONNECT - HOLD) / RETRACT;
+      const fade = Math.max(0, 1 - u * 2);
+      headDot.style.opacity = fade;
+      headDot.style.transform = `scale(${0.4 + 0.6 * fade})`;
+    }
+
+    if (t < CONNECT) {
+      line.style.opacity = '1';
+    } else if (t < CONNECT + HOLD) {
+      line.style.opacity = '0.6';
+    } else {
+      const u = (t - CONNECT - HOLD) / RETRACT;
+      line.style.opacity = 0.6 * (1 - u);
+    }
+
+    if (t < 1) {
+      energyRAF = requestAnimationFrame(step);
+    } else {
+      line.remove();
+      headDot.remove();
+      energyLine = null;
+      energyDot = null;
+      energyRAF = null;
+    }
+  }
+
+  energyRAF = requestAnimationFrame(step);
+}
+
 // click handlers
 buttons.forEach(btn => {
   btn.addEventListener('click', () => {
     const pageNum = Number(btn.dataset.page);
+    if (pageNum === targetPage) return;
+
+    const fromPage = buttons.findIndex(b => b.classList.contains('active'));
+    transfer(fromPage, pageNum);
     goToPage(pageNum);
   });
 });
