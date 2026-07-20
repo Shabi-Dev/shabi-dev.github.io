@@ -56,6 +56,7 @@ header {
   margin-left: 0.5rem;
   white-space: nowrap;
   margin-right: auto;
+  color: #4a90ff;
 }
 
 .nav-links {
@@ -94,19 +95,19 @@ header {
 
 .nav-btn .base {
   position: relative;
-  color: rgba(243, 133, 36, 0.35);
+  color: rgba(63, 139, 255, 0.35);
   transition: color 0.3s;
 }
 
 .nav-btn:hover .base {
-  color: rgba(243, 133, 36, 0.65);
+  color: rgba(63, 139, 255, 0.65);
 }
 
 .nav-btn .fill {
   position: absolute;
   inset: 0;
   color: #3068c3;
-    clip-path: inset(0 0 0 0);
+  clip-path: inset(0 0 0 0);
 }
 
 .nav-btn:not(.active) .fill {
@@ -116,6 +117,22 @@ header {
 
 .nav-btn.active {
   font-weight: 700;
+}
+
+/* blue bar that glides between buttons */
+.nav-indicator {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 0;
+  height: 3px;
+  border-radius: 999px;
+  background: #3f8bff;
+  box-shadow: 0 0 8px rgba(63, 139, 255, 0.7);
+  pointer-events: none;
+  transition: left 0.45s cubic-bezier(0.4, 0, 0.2, 1),
+              width 0.45s cubic-bezier(0.4, 0, 0.2, 1),
+              top 0.45s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 /* indivual pages */

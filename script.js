@@ -20,15 +20,31 @@ let bgX = 0;          // current bg horizontal offset
 let bgY = 0;
 
 // target coordinates to lerp
-let targetBgX = 0;    
+let targetBgX = 0;
 let targetBgY = 0;
 
 // lerp speed for smooth bg movement
-const bgSpeed = 0.01;  
+const bgSpeed = 0.01;
 
 
 function lerp(start, end, t) {
   return start + (end - start) * t;
+}
+
+// The sliding blue indicator that glides between buttons
+const indicator = document.createElement('div');
+indicator.className = 'nav-indicator';
+navContainer.appendChild(indicator);
+
+// Positions the indicator underneath the active button
+function moveIndicator(page) {
+  const label = buttons[page].querySelector('.label');
+  const r = label.getBoundingClientRect();
+  const nav = navContainer.getBoundingClientRect();
+
+  indicator.style.left = (r.left - nav.left) + 'px';
+  indicator.style.top = (r.bottom - nav.top + 5) + 'px';
+  indicator.style.width = r.width + 'px';
 }
 
 // Changes page and starts animation
@@ -41,6 +57,8 @@ function goToPage(page) {
   // update active button styling
   buttons.forEach(btn => btn.classList.remove('active'));
   buttons[page].classList.add('active');
+
+  moveIndicator(page);
 }
 
 // Animate background position smoothly
@@ -49,7 +67,7 @@ function animate() {
   // check for scroll
   const currentPageEl = document.querySelectorAll('.page')[targetPage];
   targetBgY = currentPageEl.scrollTop * 0.1;
-  
+
   bgX = lerp(bgX, targetBgX, bgSpeed);
   bgY = lerp(bgY, targetBgY, bgSpeed);
 
@@ -79,9 +97,7 @@ function cancelEnergyEffects() {
   }
 }
 
-
-
-// Animates the ink fill + glowing line
+// Animates the ink fill (text turning blue) + glowing energy line
 function transfer(from, to) {
   if (from === to || from < 0) return;
 
@@ -93,7 +109,7 @@ function transfer(from, to) {
   const sourceFill = source.querySelector('.fill');
   const targetFill = target.querySelector('.fill');
 
-  // prevent double clikc issues
+  // prevent double click issues
   [sourceFill, targetFill].forEach(el => {
     el.getAnimations().forEach(a => a.cancel());
   });
@@ -104,7 +120,7 @@ function transfer(from, to) {
 
   const right = to > from;
 
-  // src
+  // src: blue drains out of the old button
   sourceFill.animate([
     { clipPath: 'inset(0 0 0 0)' },
     { clipPath: right ? 'inset(0 0 0 100%)' : 'inset(0 100% 0 0)' }
@@ -114,7 +130,7 @@ function transfer(from, to) {
     fill: 'forwards'
   });
 
-  // tgt
+  // tgt: blue fills the new button
   targetFill.animate([
     { clipPath: right ? 'inset(0 100% 0 0)' : 'inset(0 0 0 100%)' },
     { clipPath: 'inset(0 0 0 0)' }
@@ -151,8 +167,8 @@ function transfer(from, to) {
   line.style.zIndex = '0';
 
   line.style.background = right
-    ? `linear-gradient(90deg, rgba(243,156,18,0), rgba(243,156,18,.15) 20%, rgba(243,156,18,.55) 45%, rgba(255,220,120,1) 100%)`
-    : `linear-gradient(270deg, rgba(243,156,18,0), rgba(243,156,18,.15) 20%, rgba(243,156,18,.55) 45%, rgba(255,220,120,1) 100%)`;
+    ? `linear-gradient(90deg, rgba(48,104,195,0), rgba(48,104,195,.15) 20%, rgba(63,139,255,.55) 45%, rgba(180,210,255,1) 100%)`
+    : `linear-gradient(270deg, rgba(48,104,195,0), rgba(48,104,195,.15) 20%, rgba(63,139,255,.55) 45%, rgba(180,210,255,1) 100%)`;
 
   navContainer.appendChild(line);
 
@@ -161,8 +177,8 @@ function transfer(from, to) {
   headDot.style.width = '8px';
   headDot.style.height = '8px';
   headDot.style.borderRadius = '50%';
-  headDot.style.background = '#ffd96a';
-  headDot.style.boxShadow = '0 0 10px #ffd96a, 0 0 18px #f39c12';
+  headDot.style.background = '#bcd7ff';
+  headDot.style.boxShadow = '0 0 10px #4a90ff, 0 0 18px #3068c3';
 
   navContainer.appendChild(headDot);
 
@@ -256,6 +272,9 @@ buttons.forEach(btn => {
     goToPage(pageNum);
   });
 });
+
+// keep the indicator aligned when the layout changes
+window.addEventListener('resize', () => moveIndicator(targetPage));
 
 // Init bruv
 goToPage(0);
