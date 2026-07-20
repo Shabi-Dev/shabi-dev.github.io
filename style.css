@@ -63,6 +63,7 @@ header {
   gap: 0.66rem;
   flex-wrap: nowrap;
   justify-content: space-between;
+  position: relative;
 }
 
 /* navigation buttons */
@@ -74,17 +75,42 @@ header {
   letter-spacing: 0.05em;
   background: none;
   border: none;
-  color: #5e8acd; 
   margin: 0 1rem;
   cursor: pointer;
   padding: 0.5rem 0rem;
-  transition: color 0.3s;
   white-space: nowrap;
   flex-shrink: 0;
+    position: relative; 
+  z-index: 1; 
+  overflow: visible;
 }
 
-.nav-btn:hover, .nav-btn.active {
+
+.nav-btn .label {
+  position: relative;
+  z-index: 2;
+  display: inline-block;
+}
+
+.nav-btn .base {
+  position: relative;
+  color: rgba(243, 133, 36, 0.35);
+  transition: color 0.3s;
+}
+
+.nav-btn:hover .base {
+  color: rgba(243, 133, 36, 0.65);
+}
+
+.nav-btn .fill {
+  position: absolute;
+  inset: 0;
   color: #3068c3;
+    clip-path: inset(0 0 0 0);
+}
+
+.nav-btn:not(.active) .fill {
+  clip-path: inset(0 100% 0 0);
 }
 
 
