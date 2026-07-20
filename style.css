@@ -21,6 +21,11 @@ html, body {
   font-size: 1.6rem;
 }
 
+a,
+a:visited {
+  color: rgb(0, 170, 255);
+}
+
 .background-pattern {
   position: fixed;
   top: 0; left: 0;
@@ -56,7 +61,7 @@ header {
   margin-left: 0.5rem;
   white-space: nowrap;
   margin-right: auto;
-  color: #4a90ff;
+  color: #fff;
 }
 
 .nav-links {
